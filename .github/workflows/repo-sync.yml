@@ -1,21 +1,20 @@
-# File: .github/workflows/repo-sync.yml
-
 on:
+  push:
+    branches:
+      -master
   schedule:
-  - cron:  "*/15 * * * *"
-  workflow_dispatch:
-
+    - cron: 0 */12 * * *
+    # 每隔12小时
 jobs:
-  repo-sync:
+  update_external_airflow_fork:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-    - name: repo-sync
-      uses: repo-sync/github-sync@v2
-      with:
-        source_repo: ""
-        source_branch: "https://gitcode.net/qq_32394351/dr_py"
-        destination_branch: "https://github.com/cfsxy/dr_py"
-        github_token: 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
+      - uses: TobKed/github-forks-sync-action@master
+        with:
+          github_token: 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 # 令牌
+          upstream_repository: qq_32394351/dr_py  # 上游仓库
+          target_repository: cfsxy/dr_py  # 你要推送的仓库
+          upstream_branch: master  # 默认是拉取上游仓库的master分支
+          target_branch: master  # 默认推送到你的仓库master分支
+          force: true  # 是否强制推送
+          tags: true  # 确定是否使用-tags
